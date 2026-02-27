@@ -72,7 +72,10 @@ export async function POST(request: NextRequest) {
         if (process.env.NOTIFY_EMAIL_FROM &&
             !process.env.NOTIFY_EMAIL_FROM.includes('your.gmail') &&
             process.env.NOTIFY_EMAIL_TO) {
-            sendReservationNotification({ name, email, phone, date, time, guests, special_requests })
+            sendReservationNotification({
+                id: savedData.id as string | undefined,
+                name, email, phone, date, time, guests, special_requests
+            })
                 .catch((err) => console.error('Email notification failed:', err))
         }
 

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
-
 type ReservationDetails = {
+  id?: string
   name: string
   email: string
   phone: string
@@ -12,7 +12,7 @@ type ReservationDetails = {
 }
 
 export async function sendReservationNotification(details: ReservationDetails) {
-  const { name, email, phone, date, time, guests, special_requests } = details
+  const { id, name, email, phone, date, time, guests, special_requests } = details
 
   const formattedDate = new Date(date).toLocaleDateString('en-IN', {
     weekday: 'long',
@@ -20,6 +20,20 @@ export async function sendReservationNotification(details: ReservationDetails) {
     month: 'long',
     day: 'numeric',
   })
+
+  // Build the confirm link — works on both local and production
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const secret = process.env.CONFIRM_SECRET || 'restrocg04secret'
+  const confirmParams = new URLSearchParams({
+    id: id || 'unknown',
+    name,
+    email,
+    date,
+    time,
+    guests: String(guests),
+    secret,
+  })
+  const confirmUrl = `${baseUrl}/api/reservations/confirm?${confirmParams.toString()}`
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -51,8 +65,8 @@ export async function sendReservationNotification(details: ReservationDetails) {
             <td style="padding: 10px 0; border-bottom: 1px solid #f0ebe4; font-weight: 700; color: #c9a84c; font-size: 16px;">${time}</td>
           </tr>
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f0ebe4; color: #6b7280; font-size: 14px;">👥 Guests</td>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f0ebe4; font-weight: 700; color: #1a1a1a;">${guests} ${guests === 1 ? 'Guest' : 'Guests'}</td>
+            <td style="padding: 10px 0; border-bottom: ${special_requests ? '1px solid #f0ebe4' : 'none'}; color: #6b7280; font-size: 14px;">👥 Guests</td>
+            <td style="padding: 10px 0; border-bottom: ${special_requests ? '1px solid #f0ebe4' : 'none'}; font-weight: 700; color: #1a1a1a;">${guests} ${guests === 1 ? 'Guest' : 'Guests'}</td>
           </tr>
           ${special_requests ? `
           <tr>
@@ -62,14 +76,25 @@ export async function sendReservationNotification(details: ReservationDetails) {
           ` : ''}
         </table>
 
-        <div style="margin-top: 24px; padding: 16px; background: #fef9f0; border-radius: 8px; border-left: 4px solid #c9a84c;">
+        <!-- Confirm Button -->
+        <div style="margin-top: 28px; text-align: center;">
+          <a href="${confirmUrl}"
+             style="display: inline-block; background: linear-gradient(135deg, #c9a84c, #b8942f); color: #1a2e1a; text-decoration: none; padding: 14px 36px; border-radius: 8px; font-weight: 700; font-size: 16px; letter-spacing: 0.03em;">
+            ✅ Confirm Reservation
+          </a>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #9ca3af;">
+            Clicking this will send a confirmation email to the guest automatically.
+          </p>
+        </div>
+
+        <div style="margin-top: 24px; padding: 14px; background: #fef9f0; border-radius: 8px; border-left: 4px solid #c9a84c;">
           <p style="margin: 0; color: #6b7280; font-size: 13px;">
-            ⚡ This reservation is currently <strong>pending</strong>. You can confirm or manage it via your Supabase dashboard.
+            ⚡ Status is currently <strong>pending</strong> until you confirm above.
           </p>
         </div>
 
         <p style="margin: 24px 0 0; font-size: 12px; color: #9ca3af; text-align: center;">
-          Restro CG04 • Sector 27, Naya Raipur, Chhattisgarh
+          Restro CG04 • Sector 19, Nava Raipur, Chhattisgarh
         </p>
       </div>
     </div>
