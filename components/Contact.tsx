@@ -11,12 +11,12 @@ const contactInfo = [
   {
     icon: Phone,
     title: 'Phone',
-    lines: ['+91 92445 53316', '+91 72239 33189'],
+    lines: ['+91 98765 43210', '+91 91234 56789'],
   },
   {
     icon: Mail,
     title: 'Email',
-    lines: ['shrikantgendle61@gmail.com'],
+    lines: ['restrocg04.info@example.com'],
   },
   {
     icon: Clock,
