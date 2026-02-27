@@ -1,6 +1,7 @@
 'use client'
 
 import { MapPin, Phone, Clock, Mail } from 'lucide-react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const contactInfo = [
   {
@@ -26,10 +27,12 @@ const contactInfo = [
 ]
 
 export default function Contact() {
+  useScrollReveal()
+
   return (
     <section id="contact" className="contact section" style={{ background: 'var(--color-cream)' }}>
       <div className="container">
-        <div className="section-header">
+        <div className="section-header" data-reveal="slide-up">
           <span className="section-label">Find Us</span>
           <h2 className="section-title">Visit Us</h2>
           <p className="section-subtitle">
@@ -40,8 +43,13 @@ export default function Contact() {
         <div className="contact-layout">
           {/* Info Cards */}
           <div className="contact-info">
-            {contactInfo.map((item) => (
-              <div key={item.title} className="contact-card">
+            {contactInfo.map((item, i) => (
+              <div
+                key={item.title}
+                className="contact-card"
+                data-reveal="slide-left"
+                data-reveal-delay={String(i * 80)}
+              >
                 <div className="contact-icon">
                   <item.icon size={22} />
                 </div>
@@ -55,10 +63,13 @@ export default function Contact() {
             ))}
           </div>
 
-          {/* Map Embed */}
-          <div className="contact-map">
+          {/* Map / CTA block */}
+          <div className="contact-map" data-reveal="slide-right" data-reveal-delay="100">
             <div className="map-placeholder">
-              <div className="map-pin">📍</div>
+              <div className="map-pin-wrap">
+                <div className="map-pin-pulse" />
+                <div className="map-pin">📍</div>
+              </div>
               <h3 className="map-title">Restro CG04</h3>
               <p className="map-address">Sector 27, Naya Raipur<br />Chhattisgarh, India</p>
               <a
@@ -96,12 +107,14 @@ export default function Contact() {
           background: var(--color-white);
           border-radius: var(--radius-md);
           box-shadow: var(--shadow-sm);
-          transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+          transition: transform var(--transition-base), box-shadow var(--transition-base), border-left-color var(--transition-base);
+          border-left: 3px solid transparent;
         }
 
         .contact-card:hover {
-          transform: translateX(4px);
+          transform: translateX(6px);
           box-shadow: var(--shadow-md);
+          border-left-color: var(--color-gold);
         }
 
         .contact-icon {
@@ -114,13 +127,18 @@ export default function Contact() {
           align-items: center;
           justify-content: center;
           color: var(--color-gold);
+          transition: transform var(--transition-fast);
+        }
+
+        .contact-card:hover .contact-icon {
+          transform: scale(1.08);
         }
 
         .contact-card-title {
-          font-size: 0.82rem;
+          font-size: 0.78rem;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.12em;
           color: var(--color-text-light);
           margin-bottom: 0.3rem;
           font-family: var(--font-body);
@@ -132,6 +150,7 @@ export default function Contact() {
           line-height: 1.6;
         }
 
+        /* Map section */
         .contact-map {
           border-radius: var(--radius-lg);
           overflow: hidden;
@@ -141,6 +160,15 @@ export default function Contact() {
           display: flex;
           align-items: center;
           justify-content: center;
+          position: relative;
+        }
+
+        .contact-map::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.12), transparent 70%);
+          pointer-events: none;
         }
 
         .map-placeholder {
@@ -149,12 +177,34 @@ export default function Contact() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 1rem;
+          gap: 1.2rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        .map-pin-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
         }
 
         .map-pin {
-          font-size: 4rem;
-          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+          font-size: 3.5rem;
+          filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+          position: relative;
+          z-index: 1;
+          animation: pulseDot 2.4s ease-in-out infinite;
+        }
+
+        .map-pin-pulse {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: rgba(201,168,76,0.2);
+          animation: pulseDot 2.4s ease-in-out infinite;
         }
 
         .map-title {
@@ -164,7 +214,7 @@ export default function Contact() {
         }
 
         .map-address {
-          color: rgba(255,255,255,0.7);
+          color: rgba(255,255,255,0.65);
           line-height: 1.7;
           font-size: 0.95rem;
         }
@@ -173,7 +223,6 @@ export default function Contact() {
           .contact-layout {
             grid-template-columns: 1fr;
           }
-
           .contact-map {
             min-height: 320px;
           }

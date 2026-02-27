@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Star, User } from 'lucide-react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 type Review = {
     id: string
@@ -26,7 +27,7 @@ function StarRating({ rating }: { rating: number }) {
             {[1, 2, 3, 4, 5].map((s) => (
                 <Star
                     key={s}
-                    size={16}
+                    size={15}
                     fill={s <= rating ? '#c9a84c' : 'none'}
                     color={s <= rating ? '#c9a84c' : '#d1d5db'}
                 />
@@ -41,6 +42,7 @@ export default function Reviews() {
     const [form, setForm] = useState({ author_name: '', rating: 5, comment: '' })
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
+    useScrollReveal()
 
     useEffect(() => {
         fetch('/api/reviews')
@@ -77,27 +79,32 @@ export default function Reviews() {
     return (
         <section id="reviews" className="reviews section" style={{ background: '#f8f4ef' }}>
             <div className="container">
-                <div className="section-header">
+                <div className="section-header" data-reveal="slide-up">
                     <span className="section-label">Reviews</span>
                     <h2 className="section-title">What Our Guests Say</h2>
-                    <div className="reviews-summary">
-                        <div className="avg-rating">
-                            <span className="avg-number">{avgRating.toFixed(1)}</span>
-                            <div>
-                                <StarRating rating={Math.round(avgRating)} />
-                                <span className="reviews-count">{reviews.length} Reviews</span>
-                            </div>
+                    <div className="avg-rating">
+                        <span className="avg-number">{avgRating.toFixed(1)}</span>
+                        <div>
+                            <StarRating rating={Math.round(avgRating)} />
+                            <span className="reviews-count">{reviews.length} verified reviews</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Review Cards */}
                 <div className="reviews-grid">
-                    {reviews.map((review) => (
-                        <div key={review.id} className="review-card card">
+                    {reviews.map((review, i) => (
+                        <div
+                            key={review.id}
+                            className="review-card card"
+                            data-reveal="slide-up"
+                            data-reveal-delay={String(i * 65)}
+                        >
+                            {/* Decorative quote */}
+                            <div className="review-quote" aria-hidden="true">❝</div>
                             <div className="review-header">
                                 <div className="reviewer-avatar">
-                                    <User size={20} />
+                                    <User size={18} />
                                 </div>
                                 <div>
                                     <div className="reviewer-name">{review.author_name}</div>
@@ -111,13 +118,13 @@ export default function Reviews() {
                                     <StarRating rating={review.rating} />
                                 </div>
                             </div>
-                            <p className="review-text">&quot;{review.comment}&quot;</p>
+                            <p className="review-text">"{review.comment}"</p>
                         </div>
                     ))}
                 </div>
 
                 {/* Write Review */}
-                <div className="write-review-wrap">
+                <div className="write-review-wrap" data-reveal="slide-up">
                     {submitted && (
                         <div className="success-msg">
                             ✅ Thank you for your review! It has been submitted.
@@ -203,10 +210,6 @@ export default function Reviews() {
             </div>
 
             <style jsx>{`
-        .reviews-summary {
-          margin-top: 1rem;
-        }
-
         .avg-rating {
           display: inline-flex;
           align-items: center;
@@ -215,6 +218,7 @@ export default function Reviews() {
           padding: 1rem 1.5rem;
           border-radius: var(--radius-md);
           box-shadow: var(--shadow-sm);
+          margin-top: 1rem;
         }
 
         .avg-number {
@@ -226,21 +230,35 @@ export default function Reviews() {
         }
 
         .reviews-count {
-          font-size: 0.8rem;
+          font-size: 0.78rem;
           color: var(--color-text-muted);
           display: block;
-          margin-top: 0.25rem;
+          margin-top: 0.3rem;
         }
 
         .reviews-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 1.5rem;
-          margin-bottom: 2.5rem;
+          margin-bottom: 3rem;
         }
 
         .review-card {
           padding: 1.5rem;
+          position: relative;
+          overflow: visible;
+        }
+
+        .review-quote {
+          position: absolute;
+          top: -0.5rem;
+          right: 1.2rem;
+          font-size: 5rem;
+          line-height: 1;
+          color: rgba(201,168,76,0.08);
+          font-family: Georgia, serif;
+          pointer-events: none;
+          select: none;
         }
 
         .review-header {
@@ -269,14 +287,15 @@ export default function Reviews() {
         }
 
         .review-date {
-          font-size: 0.78rem;
+          font-size: 0.75rem;
           color: var(--color-text-light);
+          margin-top: 0.1rem;
         }
 
         .review-text {
           font-size: 0.9rem;
           color: var(--color-text-muted);
-          line-height: 1.7;
+          line-height: 1.75;
           font-style: italic;
         }
 
@@ -328,7 +347,23 @@ export default function Reviews() {
         }
 
         .rating-input button:hover {
-          transform: scale(1.2);
+          transform: scale(1.25);
+        }
+
+        @media (max-width: 600px) {
+          .reviews-grid {
+            grid-template-columns: 1fr;
+            overflow-x: auto;
+            display: flex;
+            gap: 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.5rem;
+          }
+          .review-card {
+            min-width: 280px;
+            scroll-snap-align: start;
+          }
         }
       `}</style>
         </section>
