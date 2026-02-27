@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { sendReservationNotification } from '@/lib/email'
+
+// Check if Supabase is actually configured (not placeholder values)
+const supabaseConfigured =
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    !process.env.SUPABASE_SERVICE_ROLE_KEY.includes('placeholder')
 
 export async function POST(request: NextRequest) {
     try {
@@ -32,24 +39,47 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        const { data, error } = await supabaseAdmin
-            .from('reservations')
-            .insert([{
-                name,
-                email,
-                phone,
-                date,
-                time,
-                guests,
-                special_requests: special_requests || null,
-                status: 'pending',
-            }])
-            .select()
-            .single()
+        // --- Supabase DB insert (only if credentials are configured) ---
+        let savedData: Record<string, unknown> = { name, email, phone, date, time, guests, special_requests, status: 'pending' }
 
-        if (error) throw error
-        return NextResponse.json(data, { status: 201 })
-    } catch {
+        if (supabaseConfigured) {
+            try {
+                const { supabaseAdmin } = await import('@/lib/supabase')
+                const { data, error } = await supabaseAdmin
+                    .from('reservations')
+                    .insert([{
+                        name, email, phone, date, time, guests,
+                        special_requests: special_requests || null,
+                        status: 'pending',
+                    }])
+                    .select()
+                    .single()
+
+                if (error) {
+                    console.error('Supabase insert error:', error)
+                } else {
+                    savedData = data
+                }
+            } catch (dbErr) {
+                console.error('Supabase connection error:', dbErr)
+                // Continue — email notification will still be sent
+            }
+        } else {
+            console.log('Supabase not configured — reservation logged to email only')
+        }
+
+        // --- Send email notification to owner (always attempted) ---
+        if (process.env.NOTIFY_EMAIL_FROM &&
+            !process.env.NOTIFY_EMAIL_FROM.includes('your.gmail') &&
+            process.env.NOTIFY_EMAIL_TO) {
+            sendReservationNotification({ name, email, phone, date, time, guests, special_requests })
+                .catch((err) => console.error('Email notification failed:', err))
+        }
+
+        return NextResponse.json(savedData, { status: 201 })
+
+    } catch (err) {
+        console.error('Reservation API error:', err)
         return NextResponse.json(
             { error: 'Failed to create reservation. Please try again.' },
             { status: 500 }

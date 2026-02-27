@@ -3,79 +3,79 @@
 import { MapPin, Phone, Clock, Mail } from 'lucide-react'
 
 const contactInfo = [
-    {
-        icon: MapPin,
-        title: 'Address',
-        lines: ['Sector 27, Naya Raipur', 'Chhattisgarh – 492002, India'],
-    },
-    {
-        icon: Phone,
-        title: 'Phone',
-        lines: ['+91 77140 XXXXX', '+91 98765 XXXXX'],
-    },
-    {
-        icon: Mail,
-        title: 'Email',
-        lines: ['info@restrocg04.in', 'reservations@restrocg04.in'],
-    },
-    {
-        icon: Clock,
-        title: 'Hours',
-        lines: ['Mon–Sun: 12 PM – 11 PM', 'Last Order: 10:30 PM'],
-    },
+  {
+    icon: MapPin,
+    title: 'Address',
+    lines: ['Sector 27, Naya Raipur', 'Chhattisgarh – 492002, India'],
+  },
+  {
+    icon: Phone,
+    title: 'Phone',
+    lines: ['+91 92445 53316', '+91 72239 33189'],
+  },
+  {
+    icon: Mail,
+    title: 'Email',
+    lines: ['shrikantgendle61@gmail.com'],
+  },
+  {
+    icon: Clock,
+    title: 'Hours',
+    lines: ['Mon–Sun: 12 PM – 11 PM', 'Last Order: 10:30 PM'],
+  },
 ]
 
 export default function Contact() {
-    return (
-        <section id="contact" className="contact section" style={{ background: 'var(--color-cream)' }}>
-            <div className="container">
-                <div className="section-header">
-                    <span className="section-label">Find Us</span>
-                    <h2 className="section-title">Visit Us</h2>
-                    <p className="section-subtitle">
-                        Nestled near the lakefront in the heart of Naya Raipur, we are easy to find and even easier to love.
-                    </p>
-                </div>
+  return (
+    <section id="contact" className="contact section" style={{ background: 'var(--color-cream)' }}>
+      <div className="container">
+        <div className="section-header">
+          <span className="section-label">Find Us</span>
+          <h2 className="section-title">Visit Us</h2>
+          <p className="section-subtitle">
+            Nestled near the lakefront in the heart of Naya Raipur, we are easy to find and even easier to love.
+          </p>
+        </div>
 
-                <div className="contact-layout">
-                    {/* Info Cards */}
-                    <div className="contact-info">
-                        {contactInfo.map((item) => (
-                            <div key={item.title} className="contact-card">
-                                <div className="contact-icon">
-                                    <item.icon size={22} />
-                                </div>
-                                <div>
-                                    <h4 className="contact-card-title">{item.title}</h4>
-                                    {item.lines.map((line) => (
-                                        <p key={line} className="contact-card-line">{line}</p>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Map Embed */}
-                    <div className="contact-map">
-                        <div className="map-placeholder">
-                            <div className="map-pin">📍</div>
-                            <h3 className="map-title">Restro CG04</h3>
-                            <p className="map-address">Sector 27, Naya Raipur<br />Chhattisgarh, India</p>
-                            <a
-                                href="https://maps.google.com/?q=Naya+Raipur+Chhattisgarh"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn btn-primary"
-                                id="open-maps-btn"
-                            >
-                                Open in Google Maps →
-                            </a>
-                        </div>
-                    </div>
+        <div className="contact-layout">
+          {/* Info Cards */}
+          <div className="contact-info">
+            {contactInfo.map((item) => (
+              <div key={item.title} className="contact-card">
+                <div className="contact-icon">
+                  <item.icon size={22} />
                 </div>
+                <div>
+                  <h4 className="contact-card-title">{item.title}</h4>
+                  {item.lines.map((line) => (
+                    <p key={line} className="contact-card-line">{line}</p>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Map Embed */}
+          <div className="contact-map">
+            <div className="map-placeholder">
+              <div className="map-pin">📍</div>
+              <h3 className="map-title">Restro CG04</h3>
+              <p className="map-address">Sector 27, Naya Raipur<br />Chhattisgarh, India</p>
+              <a
+                href="https://maps.google.com/?q=Naya+Raipur+Chhattisgarh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+                id="open-maps-btn"
+              >
+                Open in Google Maps →
+              </a>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .contact-layout {
           display: grid;
           grid-template-columns: 1fr 1.5fr;
@@ -179,6 +179,6 @@ export default function Contact() {
           }
         }
       `}</style>
-        </section>
-    )
+    </section>
+  )
 }
