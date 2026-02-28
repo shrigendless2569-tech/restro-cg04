@@ -91,7 +91,7 @@ export default function Hero() {
         <ChevronDown size={24} />
       </button>
 
-      <style jsx>{`
+      <style>{`
         .hero {
           position: relative;
           min-height: 100vh;

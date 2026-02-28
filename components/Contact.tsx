@@ -86,7 +86,7 @@ export default function Contact() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .contact-layout {
           display: grid;
           grid-template-columns: 1fr 1.5fr;

@@ -22,7 +22,7 @@ export async function sendReservationNotification(details: ReservationDetails) {
   })
 
   // Build the confirm link — works on both local and production
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://restro-cg04.vercel.app'
   const secret = process.env.CONFIRM_SECRET || 'restrocg04secret'
   const confirmParams = new URLSearchParams({
     id: id || 'unknown',

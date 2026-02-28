@@ -209,7 +209,7 @@ export default function Reviews() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
         .avg-rating {
           display: inline-flex;
           align-items: center;

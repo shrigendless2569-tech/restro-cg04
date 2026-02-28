@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .footer {
           background: var(--color-forest-dark);
           padding: 5rem 0 2rem;

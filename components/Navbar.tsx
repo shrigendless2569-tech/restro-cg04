@@ -138,7 +138,7 @@ export default function Navbar() {
         </ul>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .navbar {
           position: fixed;
           top: 0;

@@ -245,7 +245,7 @@ export default function Reservation() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
         .reservation {
           position: relative;
           padding: var(--section-padding);

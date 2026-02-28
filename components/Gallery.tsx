@@ -96,7 +96,7 @@ export default function Gallery() {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .gallery-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -121,11 +121,11 @@ export default function Gallery() {
           min-height: 220px;
         }
 
-        :global(.gallery-img) {
+        .gallery-img {
           transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94) !important;
         }
 
-        .gallery-item:hover :global(.gallery-img) {
+        .gallery-item:hover .gallery-img {
           transform: scale(1.08) !important;
         }
 
@@ -147,7 +147,7 @@ export default function Gallery() {
           opacity: 1;
         }
 
-        :global(.gallery-zoom-icon) {
+        .gallery-zoom-icon {
           color: var(--color-gold-light);
           align-self: flex-end;
           margin-bottom: auto;
@@ -157,7 +157,7 @@ export default function Gallery() {
           transition: opacity 0.25s ease 0.05s, transform 0.25s ease 0.05s;
         }
 
-        .gallery-item:hover :global(.gallery-zoom-icon) {
+        .gallery-item:hover .gallery-zoom-icon {
           opacity: 1;
           transform: scale(1);
         }

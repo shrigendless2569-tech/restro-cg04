@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import { Leaf, Star, Clock, MapPin } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -93,7 +92,7 @@ export default function About() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .about {
           background: var(--color-cream);
         }
